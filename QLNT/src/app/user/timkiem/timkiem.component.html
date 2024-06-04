@@ -1,0 +1,197 @@
+<style>
+    .container {
+        max-width: 1500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 2px solid #545fc6;
+        border-radius: 5px;
+    }
+    h2 {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    p {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .btn-primary {
+        margin-top: 20px;
+    }
+</style>
+
+    <div class="card text-bg-dark">
+        <img style="height: 100px;width: auto; " src="https://png.pngtree.com/thumb_back/fw800/back_our/20190628/ourmid/pngtree-original-blue-technology-line-dot-point-line-background-material-image_276926.jpg" class="card-img" alt="...">
+       
+        <div class="card-img-overlay">
+        <div class="row">
+           
+            <h5 class="card-title"><img style="height: 50px ;" src="http://www.thongtinlietsi.gov.vn/assets/img/app/header11.png" alt=""> Cổng thông tin điện tử về liệt sỹ,mộ liệt sỹ, nghĩa trang liệt sỹ</h5>
+        
+        </div>
+        
+          <!-- <p class="card-text"><small>Last updated 3 mins ago</small></p> -->
+        </div>
+      </div>
+
+
+ <nav class="navbar navbar-expand" style="background-color:#00B2EE;">
+    <div class="container-fluid">
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a style="color:white;" class="nav-link active" aria-current="page" href="/trangchu">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color:white;" class="nav-link active" aria-current="page" href="#">Tin tức </a>
+                </li>
+                <li class="nav-item">
+                    <a style="color:white;" class="nav-link active" aria-current="page" routerLink="/timkiem">Tìm kiếm</a>
+                </li>
+                <li class="nav-item">
+                    <a style="color:white;" class="nav-link active" aria-current="page" href="#">Liên hệ phản hồi</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+
+
+<br>
+<form [formGroup]="formTimKiem" class="container" style="background-color: #f6f8f7; box-shadow: 5px 5px 10px rgba(9, 6, 6, 0.5);">
+    <h2>Tra cứu thông tin liệt sỹ</h2>
+    <hr>
+    <div class="row">
+      <p>Thông tin liệt sỹ</p>
+      <div class="col-md-4">
+        <label for="ten">Họ tên liệt sỹ</label>
+        <input class="form-control" formControlName="ten" type="text" id="ten" placeholder="Nhập tối thiểu 2 kí tự">
+      </div>
+      <div class="col-md-2">
+        <label for="birth-year-select">Năm sinh</label>
+        <select formControlName="namSinh" class="form-control" id="birth-year-select">
+          <option value="0" selected>Chọn</option>
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <label for="death-year-select">Năm hy sinh</label>
+        <select formControlName="namHySinh" class="form-control" id="death-year-select">
+          <option value="0" selected>Chọn</option>
+          <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+        </select>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <p>Quê quán</p>
+      <div class="row">
+        <div class="col-md-4">
+          <label for="thanhPho">Tỉnh/Thành Phố</label>
+          <select formControlName="thanhPho" class="form-control" id="thanhPho" (change)="onCityChange($event)">
+            <option value="0" selected>Chọn</option>
+            <option *ngFor="let item of list" [value]="item.diaChiId">{{ item.ten }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="quan">Quận/Huyện</label>
+          <select class="form-control" formControlName="quan" id="quan" (change)="onDistrictChange($event)">
+            <option value="0" selected>Chọn</option>
+            <option *ngFor="let district of homeDistricts" [value]="district.diaChiId">{{ district.ten }}</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="phuong">Xã/Phường</label>
+          <select class="form-control" formControlName="phuong" id="phuong">
+            <option value="0" selected>Chọn</option>
+            <option *ngFor="let ward of homeWards" [value]="ward.diaChiId">{{ ward.ten }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <p>Nghĩa trang yên nghỉ</p>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="nghiaTrangThanhpho">Tỉnh/Thành Phố</label>
+          <select formControlName="nghiaTrangThanhpho" class="form-control" id="nghiaTrangThanhpho" (change)="nghiaTrangOnCityChange($event)">
+            <option value="0" disabled selected>Chọn</option>
+            <option *ngFor="let item of list" [value]="item.diaChiId">{{ item.ten }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="nghiaTrangQuan">Quận/Huyện</label>
+          <select class="form-control" id="nghiaTrangQuan" (change)="nghiaTrangOnDistrictChange($event)" formControlName="nghiaTrangQuan">
+            <option value="0" disabled selected>Chọn</option>
+            <option *ngFor="let district of cemeteryDistricts" [value]="district.diaChiId">{{ district.ten }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="nghiaTrangPhuong">Xã/Phường</label>
+          <select class="form-control" formControlName="nghiaTrangPhuong" id="nghiaTrangPhuong">
+            <option value="0" disabled selected>Chọn</option>
+            <option *ngFor="let ward of cemeteryWards" [value]="ward.diaChiId">{{ ward.ten }}</option>
+          </select>
+        </div>
+        <div class="col-md-3">
+          <label for="nghiaTrangId">Nghĩa Trang</label>
+          <select class="form-control" formControlName="nghiaTrangId" id="nghiaTrangId">
+            <option value="0" disabled selected>Chọn</option>
+            <!-- Populate cemetery options if applicable -->
+          </select>
+        </div>
+      </div>
+    </div>
+    <br>
+    <div style="text-align: center;">
+      <button type="button" class="btn btn-primary" (click)="search()">Tìm kiếm</button>
+    </div>
+  </form>
+  
+  <br>
+  <div class="card container">
+    <div class="card-header">
+      <h2>Danh sách liệt sỹ</h2>
+    </div>
+    <div class="card-body">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Họ tên</th>
+            <th>Năm sinh</th>
+            <th>Năm hy sinh</th>
+            <th>Nguyên quán</th>
+            <th>Nghĩa trang</th>
+            <th>Tỉnh/Thành Phố</th>
+            <th>Quận/Huyện</th>
+            <th>Phường/Xã</th>
+            <th>Vị trí hàng</th>
+            <th>Vị trí cột</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lietsy of listLietSy">
+            <td>{{ lietsy.lietSyId }}</td>
+            <td>{{ lietsy.hoTen }}</td>
+            <td>{{ lietsy.ngaySinh | date:'yyyy' }}</td>
+            <td>{{ lietsy.ngayMat | date:'yyyy' }}</td>
+            <td>{{ lietsy.diaChiId }}</td>
+            <td>{{ lietsy.nghiaTrangId }}</td>
+            <td>{{ lietsy.tinhTrang }}</td>
+            <td>{{ lietsy.viTriHang }}</td>
+            <td>{{ lietsy.viTriCot }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
