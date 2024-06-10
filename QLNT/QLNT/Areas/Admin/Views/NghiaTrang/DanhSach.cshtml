@@ -1,0 +1,128 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<div class="container-fluid">
+	<div class="row">
+		<h1 style="text-align:center" id="tenNghiaTrang">Danh Sách Liệt Sỹ</h1>
+	</div>
+	<div class="row p-2">
+		
+		<div class="col-md-2">
+			<span>Số dòng/trang</span>
+		</div>
+		<div class="col-md-2">
+			@Html.DropDownList("Pagesize", new SelectList(ViewBag.Pagesize, "ID", "ID"), new { @class = "form-control" })
+		</div>
+		<div class="col-md-3">
+			<div class="dropdown" style="float:right">
+				<select class="form-select" aria-label="Default select example" id="trangthai">
+					<option value="active">Hoạt động</option>
+					<option value="inactive">Đã xóa</option>
+				</select>
+			</div>
+		</div>
+
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>ID</th>
+				
+				<th>Họ Tên</th>
+				<th>Địa Chỉ ID</th>
+				<th>SĐT</th>
+				<th>Ngày Sinh</th>
+				<th>Ngày Mất</th>
+				<th>Đơn Vị</th>
+				<th>Cấp Bậc</th>
+				<th>Vị Trí Hàng</th>
+				<th>Vị Trí Cột</th>
+				
+				
+				
+
+
+			</tr>
+		</thead>
+		<tbody id="tbData"></tbody>
+		<tfoot style="text-align:center">
+			<tr>
+				<th colspan="100" id="pages"></th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+@section scripts {
+	<script>
+		var nghiatrang = {
+			init: function () {
+				nghiatrang.search(1);
+				$("#search, #Pagesize, #trangthai").change(function () {
+					nghiatrang.search(1);
+				});
+				
+			},
+
+			
+			search: function (index) {
+				var name = $("#search").val();
+				var size = $("#Pagesize").val();
+				var trangthai = $("#trangthai").val();
+				var form = new FormData();
+				form.append("name", name);
+				form.append("size", size);
+				form.append("index", index);
+				form.append("trangthai", trangthai);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/NghiaTrang/ListLietSy/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.lietSyId + "</td>";
+						
+							html += "<td>" + a.hoTen + "</td>";
+							html += "<td>" + a.diaChiId + "</td>";
+							html += "<td>" + a.sdt + "</td>";
+							html += "<td>" + a.ngaySinh + "</td>";
+							html += "<td>" + a.ngayMat + "</td>";
+							html += "<td>" + a.donVi + "</td>";
+							html += "<td>" + a.capBac + "</td>";
+							html += "<td>" + a.viTriHang + "</td>";
+							html += "<td>" + a.viTriCot + "</td>";
+							
+							html += "</tr>";
+						});
+						$("#tenNghiaTrang").text("Danh sách liệt sỹ " + res.tenNghiaTrang);
+
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+
+			
+		};
+
+		nghiatrang.init();
+
+		function goto(i) {
+			nghiatrang.search(i);
+		}
+	</script>
+}

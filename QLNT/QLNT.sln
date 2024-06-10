@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GUIs", "GUIs\GUIs.csproj", "{F18713FD-86A9-4E31-91B2-52ABCE4F6FF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QLNT", "QLNT\QLNT.csproj", "{89927B3F-ADB9-4419-9193-DBD03458CD6F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F18713FD-86A9-4E31-91B2-52ABCE4F6FF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F18713FD-86A9-4E31-91B2-52ABCE4F6FF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F18713FD-86A9-4E31-91B2-52ABCE4F6FF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F18713FD-86A9-4E31-91B2-52ABCE4F6FF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89927B3F-ADB9-4419-9193-DBD03458CD6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89927B3F-ADB9-4419-9193-DBD03458CD6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89927B3F-ADB9-4419-9193-DBD03458CD6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89927B3F-ADB9-4419-9193-DBD03458CD6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {9C6D7AF7-8A5A-4AF1-BB24-7596F73FA311}
+		SolutionGuid = {C7C0AF37-A60B-48F0-AA6E-58267C4B8BCC}
 	EndGlobalSection
 EndGlobal

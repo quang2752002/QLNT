@@ -1,0 +1,309 @@
+﻿@{
+	ViewData["Title"] = "Quan";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<div class="modal fade" id="new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-header">
+						<h4>Thêm mới Quận/Huyện</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Tên Xã/Phường
+										</span>
+									</div>
+									<input type="text" class="form-control" id="provinceName" />
+								</div>
+							</div>
+
+
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-header">
+						<h4>Chỉnh sửa Xã/Phường </h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Tên xã/phường
+										</span>
+									</div>
+									<input type="text" class="form-control" id="name" />
+									<input hidden type="number" class="form-control" id="id" />
+								</div>
+							</div>
+
+
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh sửa</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+
+
+	<div class="row">
+
+		<h1 style="text-align:center">Danh sách Quận/Huyện</h1>
+	</div>
+
+	<div class="row p-2">
+		<div class="col-md-2">
+			<button class="btn btn-primary" id="btnew" data-toggle="modal" data-target="#new">
+				Thêm mới
+			</button>
+		</div>
+		<div class="col-md-2">
+			<span>Số dòng/trang</span>
+		</div>
+		<div class="col-md-2">
+
+			@Html.DropDownList("Pagesize", new SelectList(ViewBag.Pagesize, "ID", "ID"), new { @class = "form-control" })
+		</div>
+		<div class="col-md-3">
+			<div class="dropdown" style="float:right">
+				<select class="form-select" aria-label="Default select example" id="trangthai">
+
+					<option value="active">Hoạt động</option>
+					<option value="inactive">Đã xóa</option>
+				</select>
+			</div>
+		</div>
+
+
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					ID
+				</th>
+				<th>
+					Tên Xã/Phường
+				</th>
+				
+				<th>
+					Chỉnh sửa
+				</th>
+				<th>Xóa</th>
+			</tr>
+		</thead>
+
+		<tbody id="tbData"></tbody>
+		<tfoot style="text-align:center">
+			<tr>
+				<th colspan="100" id="pages">
+
+				</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+@section scripts {
+	<script>
+		var diachi = {
+			init: function () {
+				diachi.search(1);
+				$("#search, #Pagesize,#trangthai").change(function () {
+					diachi.search(1);
+				});
+				$("#btnew").click(function () {
+					$("#create").val("Thêm mới");
+					$("#id").val(0);
+				});
+				$("#close").click(function () {
+					$('#new').modal('hide');
+				});
+				$("#create").click(function () {
+					diachi.create();
+				});
+				$('#update').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var idhd = button.data('whatever')
+
+					diachi.getdiachi(idhd);
+
+				});
+				$("#save").click(function () {
+					diachi.save();
+					diachi.search(1);
+				});
+
+			},
+			search: function (index) {
+				var name = $("#search").val();
+				var size = $("#Pagesize").val();
+				var trangthai = $("#trangthai").val();
+				var form = new FormData();
+				form.append("name", name);
+				form.append("size", size);
+				form.append("index", index);
+				form.append("trangthai", trangthai);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/DiaChi/ShowListPhuong/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.diaChiId + "</td>";
+							html += "<td>" + a.ten + "</td>";
+							
+							html += "<td>" +
+								"<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.diaChiId + "'><i class='fa fa-edit'></i></a>" + "</td>";
+							html += "<td>" +
+								"<a href='javascript:void(0)' class='btn btn-danger' onclick='diachi.delete(" + a.diaChiId + ")'><i class='fa fa-trash'></i></a>" + "</td>";
+							html += "</tr>";
+
+						});
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+
+			create: function () {
+				var name = $("#provinceName").val();
+				var form = new FormData();
+				form.append("id", 0);
+				form.append("name", name);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/DiaChi/InsertPhuong/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						// Optionally, refresh the list of provinces
+						diachi.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+
+
+
+
+			delete: function (id) {
+				// Ask for confirmation before deleting
+				if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+					// Perform the delete operation here
+					// You can use an AJAX request to delete the item from the server
+					$.ajax({
+						type: 'Delete',
+						url: '/Admin/DiaChi/Delete/' + id, // Adjust URL as necessary
+
+						success: function (res) {
+
+							// If the delete was successful, refresh the list
+							_layout.showtoast(res.mess);
+							diachi.search(1); // Assuming you want to refresh the first page
+
+						}
+					});
+				}
+			},
+			getdiachi: function (id) {
+				$.ajax({
+					type: 'get',
+					datatype: 'json',
+					url: '/Admin/DiaChi/getDiaChi/' + id,
+					success: function (res) {
+						$("#id").val(res.data.diaChiId);
+						$("#name").val(res.data.ten);
+
+					}
+				});
+			},
+			save: function () {
+				var id = $("#id").val();
+				var name = $("#name").val();
+
+				var form = new FormData()
+				form.append("id", id);
+				form.append("name", name);
+
+				$.ajax({
+					type: 'POST',
+					dataType: 'Json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/DiaChi/InsertOrUpdate/',
+					success: function (res) {
+
+						_layout.showtoast(res.mess);
+					},
+				});
+			},
+		};
+
+		diachi.init();
+
+		function goto(i) {
+			diachi.search(i);
+		}
+	</script>
+}

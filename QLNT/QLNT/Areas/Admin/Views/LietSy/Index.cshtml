@@ -1,0 +1,664 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="modal fade" id="new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-header">
+						<h4>Thêm Mới Liệt Sỹ</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Họ tên 
+										</span>
+									</div>
+									<input type="text" class="form-control" id="ten" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Quê quán
+										</span>
+									</div>
+									@Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
+									@Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
+									@Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" })
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Nơi an nghỉ
+										</span>
+									</div>
+									@Html.DropDownList("idnghiatrang", new SelectList(ViewBag.listNghiaTrang, "NghiaTrangId", "Ten"), new { @class = "form-control" })
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											SDT liên hệ
+										</span>
+									</div>
+									<input type="text" class="form-control" id="sdt" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Ngày sinh
+										</span>
+									</div>
+									<input type="datetime-local" class="form-control" id="ngaysinh" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Ngày mất
+										</span>
+									</div>
+									<input type="datetime-local" class="form-control" id="ngaymat" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Đơn vị
+										</span>
+									</div>
+									<input type="text" class="form-control" id="donvi" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Cấp bậc
+										</span>
+									</div>
+									<input type="text" class="form-control" id="capbac" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Vị trí hàng
+										</span>
+									</div>
+									<input type="number" class="form-control" id="vitrihang" min="1" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Vị trí cột
+										</span>
+									</div>
+									<input type="number" class="form-control" id="vitricot"  min="1"/>
+								</div>
+							</div>
+						</div>
+							<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Mô tả
+										</span>
+									</div>
+									<textarea type="text" class="form-control" id="mota"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Tình trạng
+										</span>
+									</div>
+									<textarea type="text" class="form-control" id="tinhtrang"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-header">
+						<h4>Chỉnh Sửa Liệt Sỹ</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Họ tên
+										</span>
+									</div>
+									<input type="text" class="form-control" id="name" />
+									<input type="number" class="form-control" id="id" hidden/>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Quê quán
+										</span>
+									</div>
+									@* @Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
+									@Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
+									@Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" }) *@
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Nơi an nghỉ
+										</span>
+									</div>
+									@Html.DropDownList("nghiatrang", new SelectList(ViewBag.listNghiaTrang, "NghiaTrangId", "Ten"), new { @class = "form-control" })
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											SDT liên hệ
+										</span>
+									</div>
+									<input type="text" class="form-control" id="phone" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Ngày sinh
+										</span>
+									</div>
+									<input type="datetime-local" class="form-control" id="birthday" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Ngày mất
+										</span>
+									</div>
+									<input type="datetime-local" class="form-control" id="deathday" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Đơn vị
+										</span>
+									</div>
+									<input type="text" class="form-control" id="unit" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Cấp bậc
+										</span>
+									</div>
+									<input type="text" class="form-control" id="rank" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Vị trí hàng
+										</span>
+									</div>
+									<input type="number" class="form-control" id="row" min="1" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Vị trí cột
+										</span>
+									</div>
+									<input type="number" class="form-control" id="col" min="1" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Mô tả
+										</span>
+									</div>
+									<textarea type="text" class="form-control" id="note"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Tình trạng
+										</span>
+									</div>
+									<textarea type="text" class="form-control" id="status"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh Sửa </button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="container-fluid">
+	<div class="row">
+		<h1 style="text-align:center" >Danh Sách Liệt Sỹ</h1>
+	</div>
+	<div class="row p-2">
+		<div class="col-md-2">
+			<button class="btn btn-primary" id="btnew" data-toggle="modal" data-target="#new">
+				Thêm mới
+			</button>
+		</div>
+		<div class="col-md-2">
+			<span>Số dòng/trang</span>
+		</div>
+		<div class="col-md-2">
+			@Html.DropDownList("Pagesize", new SelectList(ViewBag.Pagesize, "ID", "ID"), new { @class = "form-control" })
+		</div>
+		<div class="col-md-3">
+			<div class="dropdown" style="float:right">
+				<select class="form-select" aria-label="Default select example" id="trangthai">
+					<option value="active">Hoạt động</option>
+					<option value="inactive">Đã xóa</option>
+				</select>
+			</div>
+		</div>
+
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+
+				<th>ID</th>
+				<th>Họ Tên</th>
+				<th>Quê quán </th>
+				<th>Nơi an nghỉ </th>
+				@* <th>SĐT</th>
+				<th>Ngày Sinh</th>
+				<th>Ngày Mất</th> *@
+				<th>Đơn Vị</th>
+				<th>Cấp Bậc</th>
+				@* <th>Vị Trí Hàng</th>
+				<th>Vị Trí Cột</th> *@
+				<th>Chỉnh sửa</th>
+				<th>Xóa</th>
+			</tr>
+		</thead>
+		<tbody id="tbData"></tbody>
+		<tfoot style="text-align:center">
+			<tr>
+				<th colspan="100" id="pages"></th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+
+@section scripts {
+	<script>
+		var lietsy = {
+			init: function () {
+				lietsy.search(1);
+				$("#search, #Pagesize, #trangthai").change(function () {
+					lietsy.search(1);
+				});
+				$("#create").click(function () {
+					lietsy.create();
+				});
+				$('#update').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var idhd = button.data('whatever')
+
+					lietsy.getLietSy(idhd);
+
+				});
+				$("#save").click(function () {
+					lietsy.save();
+					lietsy.search(1);
+				});
+				$("#tinhDropdown").change(function () {
+					var tinhId = $(this).val();
+					lietsy.loadHuyen(tinhId);
+				});
+
+				$("#huyenDropdown").change(function () {
+					var huyenId = $(this).val();
+					lietsy.loadXa(huyenId);
+				});
+			},
+
+			loadHuyen: function (tinhId) {
+				if (tinhId) {
+					$.get('/Admin/LietSy/GetHuyen', { tinhId: tinhId }, function (data) {
+						$("#huyenDropdown").empty();
+						$("#huyenDropdown").append($('<option>', { value: '', text: 'Chọn Huyện' }));
+						$("#xaDropdown").empty();
+						$("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
+						$.each(data, function (index, item) {
+							$("#huyenDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
+						});
+					});
+				}
+			},
+
+			loadXa: function (huyenId) {
+				if (huyenId) {
+					$.get('/Admin/LietSy/GetXa', { huyenId: huyenId }, function (data) {
+						$("#xaDropdown").empty();
+						$("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
+						$.each(data, function (index, item) {
+							$("#xaDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
+						});
+					});
+				}
+			},
+			search: function (index) {
+				var name = $("#search").val();
+				var size = $("#Pagesize").val();
+				var trangthai = $("#trangthai").val();
+				var form = new FormData();
+				form.append("name", name);
+				form.append("size", size);
+				form.append("index", index);
+				form.append("trangthai", trangthai);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/LietSy/ShowList/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.lietSyId + "</td>";
+							html += "<td>" + a.hoTen + "</td>";
+							html += "<td>" + a.diaChiId + "</td>";
+							html += "<td>" + a.tenNghiaTrang + "</td>";
+							// html += "<td>" + a.sdt + "</td>";
+							// html += "<td>" + a.ngaySinh + "</td>";
+							// html += "<td>" + a.ngayMat + "</td>";
+							html += "<td>" + a.donVi + "</td>";
+							html += "<td>" + a.capBac + "</td>";
+							// html += "<td>" + a.viTriHang + "</td>";
+							// html += "<td>" + a.viTriCot + "</td>";
+							
+							html += "<td>" +
+								"<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.lietSyId + "'><i class='fa fa-edit'></i></a>" + "</td>";
+							html += "<td>" +
+								"<a href='javascript:void(0)' class='btn btn-danger'  onclick='lietsy.delete(" + a.lietSyId + ")'><i class='fa fa-trash'></i></a>" + "</td>";
+
+							html += "</tr>";
+						});
+					
+
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+			create: function () {
+				var ten = $("#ten").val();
+				var iddiachi = $("#xaDropdown").val();
+				var idnghiatrang = $("#idnghiatrang").val();
+				var sdt = $("#sdt").val();
+				var ngaysinhS = $("#ngaysinh").val();
+				var ngaymatS = $("#ngaymat").val();
+				var donvi = $("#donvi").val();
+				var capbac = $("#capbac").val();
+				var vitrihang = $("#vitrihang").val();
+				var vitricot = $("#vitricot").val();
+				var mota = $("#mota").val();
+				var tinhtrang = $("#tinhtrang").val();
+
+				var ngaysinh = new Date(ngaysinhS);
+				var ngaymat = new Date(ngaymatS);
+				var form = new FormData();
+				form.append("id", 0);
+				form.append("ten", ten);
+				form.append("iddiachi", iddiachi);
+				form.append("idnghiatrang", idnghiatrang);
+				form.append("sdt", sdt);
+				form.append("ngaysinh", ngaysinh.toISOString());
+				form.append("ngaymat", ngaymat.toISOString());
+				form.append("donvi", donvi);
+				form.append("capbac", capbac);
+				form.append("vitrihang", vitrihang);
+				form.append("vitricot", vitricot);
+				form.append("mota", mota);
+				form.append("tinhtrang", tinhtrang);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/LietSy/InsertOrUpdate/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						// Optionally, refresh the list of provinces
+						diachi.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+			save: function () {
+				var id = $("#id").val();
+				var ten = $("#name").val();
+				var iddiachi = $("#xaDropdown").val();
+				var idnghiatrang = $("#nghiatrang").val();
+				var sdt = $("#phone").val();
+				var ngaysinhS = $("#birthday").val();
+				var ngaymatS = $("#deathday").val();
+				var donvi = $("#unit").val();
+				var capbac = $("#rank").val();
+				var vitrihang = $("#row").val();
+				var vitricot = $("#col").val();
+				var mota = $("#note").val();
+				var tinhtrang = $("#status").val();
+
+				var ngaysinh = new Date(ngaysinhS);
+				var ngaymat = new Date(ngaymatS);
+				var form = new FormData();
+				form.append("id", id);
+				form.append("ten", ten);
+				form.append("iddiachi", iddiachi);
+				form.append("idnghiatrang", idnghiatrang);
+				form.append("sdt", sdt);
+				form.append("ngaysinh", ngaysinh.toISOString());
+				form.append("ngaymat", ngaymat.toISOString());
+				form.append("donvi", donvi);
+				form.append("capbac", capbac);
+				form.append("vitrihang", vitrihang);
+				form.append("vitricot", vitricot);
+				form.append("mota", mota);
+				form.append("tinhtrang", tinhtrang);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/LietSy/InsertOrUpdate/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						// Optionally, refresh the list of provinces
+						diachi.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+			getLietSy: function (id) {
+				$.ajax({
+					type: 'GET',
+					dataType: 'json',
+					url: '/Admin/LietSy/getLietSy/' + id,
+					success: function (res) {
+						$("#id").val(res.data.nghiaTrangId);
+						$("#name").val(res.data.hoTen);
+						$("#phone").val(res.data.sdt);
+						$("#birthday").val(res.data.ngaySinh);
+						$("#deathday").val(res.data.ngayMat);
+						$("#unit").val(res.data.donVi);
+						$("#rank").val(res.data.capBac);
+						$("#row").val(res.data.viTriHang);
+
+						$("#col").val(res.data.viTriCot);
+						$("#note").val(res.data.moTa);
+						$("#status").val(res.data.tinhTrang);
+
+					}
+				});
+			},
+			delete: function (id) {
+				if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+					$.ajax({
+						type: 'DELETE',
+						url: '/Admin/LietSy/Delete/' + id,
+						success: function (res) {
+							_layout.showtoast(res.mess);
+							lietsy.search(1);
+						}
+					});
+				}
+			},
+
+
+		};
+
+		lietsy.init();
+
+		function goto(i) {
+			lietsy.search(i);
+		}
+	</script>
+}

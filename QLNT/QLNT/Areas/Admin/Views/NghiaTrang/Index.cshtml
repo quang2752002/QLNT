@@ -1,0 +1,530 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="modal fade" id="new" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Thêm mới nghĩa trang</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Tên nghĩa trang</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="ten" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">SDT</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="sdt" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Email</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="email" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Diện tích</span>
+                                    </div>
+                                    <input type="number" class="form-control" id="dientich" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other input fields -->
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Địa chỉ</span>
+                                    </div>
+                                    @Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
+                                    @Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
+                                    @Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Mô tả</span>
+                                    </div>
+                                    <textarea class="form-control" id="mota"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other input fields -->
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh Sửa</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Chỉnh sửa nghĩa trang</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Tên nghĩa trang</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="name" />
+                                    <input type="number" hidden class="form-control" id="id" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">SDT</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="phone" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Email</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="gmail" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Diện tích</span>
+                                    </div>
+                                    <input type="number" class="form-control" id="acreage" />
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other input fields -->
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Địa chỉ</span>
+                                    </div>
+                                    @Html.DropDownList("thanhpho", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "thanhpho" })
+                                    @Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyen" })
+                                    @Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xa" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 p-1">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">Mô tả</span>
+                                    </div>
+                                    <textarea class="form-control" id="note"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Other input fields -->
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <h1 style="text-align:center">Danh Sách Nghĩa Trang</h1>
+    </div>
+    <div class="row p-2">
+        <div class="col-md-2">
+            <button class="btn btn-primary" id="btnew" data-toggle="modal" data-target="#new">Thêm mới</button>
+        </div>
+        <div class="col-md-2">
+            <span>Số dòng/trang</span>
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("Pagesize", new SelectList(ViewBag.Pagesize, "ID", "ID"), new { @class = "form-control" })
+        </div>
+        <div class="col-md-3">
+            <div class="dropdown" style="float:right">
+                <select class="form-select" aria-label="Default select example" id="trangthai">
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Đã xóa</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên nghĩa trang</th>
+                <th>SDT nghĩa trang</th>
+                <th>Email nghĩa trang</th>
+                <th>Địa Chỉ</th>
+                <th>Diện tích</th>
+                <th>Số lượng liệt sỹ</th>
+                <th>Danh sách liệt sỹ</th>
+                <th>Chỉnh sửa</th>
+                <th>Xóa</th>
+            </tr>
+        </thead>
+        <tbody id="tbData"></tbody>
+        <tfoot style="text-align:center">
+            <tr>
+                <th colspan="100" id="pages"></th>
+            </tr>
+        </tfoot>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        var nghiatrang = {
+            init: function () {
+                nghiatrang.search(1);
+                $("#search, #Pagesize, #trangthai").change(function () {
+                    nghiatrang.search(1);
+                });
+                
+                
+                $("#create").click(function () {
+                    nghiatrang.create();
+                });
+                $('#update').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget)
+                    var idhd = button.data('whatever')
+                    
+                    nghiatrang.getnghiatrang(idhd);
+                    var tinhId = $("#thanhpho").val();
+                    alert(tinhId);
+                    nghiatrang.loadHuyenUpdate(tinhId);
+                   
+
+                });
+                $("#tinhDropdown").change(function () {
+                    var tinhId = $("#tinhDropdown").val();
+                    nghiatrang.loadHuyen(tinhId);
+                });
+
+                $("#huyenDropdown").change(function () {
+                    var huyenId = $("#huyenDropdown").val();
+                    nghiatrang.loadXa(huyenId);
+                });
+                $("#thanhpho").change(function () {
+                    var tinhId = $("#thanhpho").val();
+                    alert(tinhId);
+                    nghiatrang.loadHuyenUpdate(tinhId);
+                });
+
+                $("#huyen").change(function () {
+                    var huyenId = $("#huyen").val();
+                    nghiatrang.loadXaUpdate(huyenId);
+                });
+
+            },
+
+            loadHuyen: function (tinhId) {
+                if (tinhId) {
+                    $.get('/Admin/NghiaTrang/GetHuyen', { tinhId: tinhId }, function (data) {
+                        $("#huyenDropdown").empty();
+                        $("#huyenDropdown").append($('<option>', { value: '', text: 'Chọn Huyện' }));
+                        $("#xaDropdown").empty();
+                        $("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
+                        $.each(data, function (index, item) {
+                            $("#huyenDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
+                        });
+                    });
+                }
+            },
+
+            loadTinhUpdate: function () {
+
+                
+
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: '/Admin/NghiaTrang/GetTinh/' 
+                        success: function (res) {
+
+                            var html = "";
+
+                            $.each(res.data, function (index, item) {
+
+                                if (res.tinh == item.diaChiId) {
+
+                                    html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                else {
+                                    html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                $("#thanhpho").html(html);
+                                nghiatrang.loadHuyenUpdate(res.tinh);
+
+                            });
+
+                        }
+                    });
+                },
+            
+            loadHuyenUpdate: function (tinhId) {
+              
+                if (tinhId) {
+                    
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+                        success: function (res) {
+                           
+                            var html = "";
+                            
+                            $.each(res.data, function (index, item) {
+                                
+                                if (res.huyen == item.diaChiId) {
+
+                                   
+                                    html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                else {
+                                    html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                $("#huyen").html(html);
+                                nghiatrang.loadXaUpdate(res.huyen);
+
+                            });
+
+                        }
+                    });
+                }
+            },
+
+            loadXaUpdate: function (huyenId) {
+                if (huyenId) {
+
+                    $.ajax({
+                        type: 'get',
+                        dataType: 'json',
+                        url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+                        success: function (res) {
+
+                            var html = "";
+
+                            $.each(res.data, function (index, item) {
+
+                                if (res.xa == item.diaChiId) {
+
+
+                                    html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                else {
+                                    html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+                                }
+                                $("#xa").html(html);
+                                
+
+                            });
+
+                        }
+                    });
+                }
+            },
+
+            search: function (index) {
+                var name = $("#search").val();
+                var size = $("#Pagesize").val();
+                var trangthai = $("#trangthai").val();
+                var form = new FormData();
+                form.append("name", name);
+                form.append("size", size);
+                form.append("index", index);
+                form.append("trangthai", trangthai);
+                $("#loading").show();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    data: form,
+                    url: '/Admin/NghiaTrang/ShowList/',
+                    success: function (res) {
+                        var html = "";
+                        $.each(res.data, function (index, a) {
+                            html += "<tr>";
+                            html += "<td>" + a.nghiaTrangId + "</td>";
+                            html += "<td>" + a.ten + "</td>";
+                            html += "<td>" + a.sdt + "</td>";
+                            html += "<td>" + a.email + "</td>";
+                            html += "<td>" + a.diaChi + "</td>";
+                            html += "<td>" + a.dienTich + "</td>";
+                            html += "<td>" + a.soluong + "</td>";
+                            html += "<td>" +
+                                "<a href='/Admin/NghiaTrang/DanhSach/" + a.nghiaTrangId+"'  class='btn btn-primary' >Danh sách liệt sỹ</a>" + "</td>";
+                            html += "<td>" +
+                                "<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.nghiaTrangId + "'><i class='fa fa-edit'></i></a>" + "</td>";
+                            html += "<td>" +
+                                "<a href='javascript:void(0)' class='btn btn-danger'  onclick='nghiatrang.delete(" + a.nghiaTrangId + ")'><i class='fa fa-trash'></i></a>" + "</td>";
+                            html += "</tr>";
+                        });
+                        $("#tbData").html(html);
+                        $("#pages").html(res.page);
+                        $("#loading").hide();
+                    },
+                });
+            },
+
+            create: function () {
+                var ten = $("#ten").val();
+                var sdt = $("#sdt").val();
+                var email = $("#email").val();
+                var dientich = $("#dientich").val();
+                var diachiId = $("#xaDropdown").val();
+                var mota = $("#mota").val();
+               
+                var form = new FormData();
+                form.append("id", 0);
+                form.append("ten", ten);
+                form.append("sdt", sdt);
+                form.append("email", email);
+                form.append("dientich", dientich);
+                form.append("diachiId", diachiId);
+                form.append("mota", mota);
+                $("#loading").show();
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    data: form,
+                    url: '/Admin/NghiaTrang/InsertOrUpdate/',
+                    success: function (res) {
+                        _layout.showtoast(res.mess);
+                        $('#new').modal('hide');
+                        $("#loading").hide();
+                        nghiatrang.search(1);
+                    },
+                    error: function (err) {
+                        _layout.showtoast("Error: " + err.responseText);
+                        $("#loading").hide();
+                    }
+                });
+            },
+
+            delete: function (id) {
+                if (confirm("Bạn có chắc chắn muốn xóa không?")) {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/Admin/NghiaTrang/Delete/' + id,
+                        success: function (res) {
+                            _layout.showtoast(res.mess);
+                            nghiatrang.search(1);
+                        }
+                    });
+                }
+            },
+
+            getnghiatrang: function (id) {
+                $.ajax({
+                    type: 'GET',
+                    dataType: 'json',
+                    url: '/Admin/NghiaTrang/getnghiatrang/' + id,
+                    success: function (res) {
+                        $("#id").val(res.data.nghiatrangId);
+                        $("#name").val(res.data.ten);
+                        $("#phone").val(res.data.sdt);
+                        $("#gmail").val(res.data.email);
+                        $("#thanhpho").val(res.tinh);
+                        
+                        $("#acreage").val(res.data.dienTich);
+                        $("#note").val(res.data.moTa);
+
+                    }
+                });
+            },
+
+            save: function () {
+                var id = $("#id").val();
+                var name = $("#name").val();
+                var form = new FormData()
+                form.append("id", id);
+                form.append("name", name);
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    data: form,
+                    url: '/Admin/nghiatrang/InsertOrUpdate/',
+                    success: function (res) {
+                        _layout.showtoast(res.mess);
+                    },
+                });
+            },
+        };
+
+        nghiatrang.init();
+
+        function goto(i) {
+            nghiatrang.search(i);
+        }
+    </script>
+}
+
