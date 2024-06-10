@@ -1,4 +1,5 @@
-﻿using GUIs.Helper;
+﻿using GUIs.Areas.Admin.Controllers;
+using GUIs.Helper;
 using Microsoft.AspNetCore.Mvc;
 using QLNT.Helper;
 using QLNT.Models.DAO;

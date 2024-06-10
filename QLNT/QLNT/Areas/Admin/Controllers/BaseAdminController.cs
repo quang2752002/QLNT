@@ -17,10 +17,10 @@ namespace GUIs.Areas.Admin.Controllers
             else
             {
                 string route = DataServices.getRouoter(HttpContext);
-                if (route == "Admin")
-                {
-                    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "Home", area = route }));
-                }
+                //if (route == "Admin")
+                //{
+                //    filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { action = "Index", controller = "Home", area = route }));
+                //}
                 
                 if (route == "Admin")
                 {

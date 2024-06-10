@@ -273,11 +273,7 @@
 				$("#thanhpho").change(function () {
 					var tinhId = $("#thanhpho").val();
 					alert(tinhId);
-					nghiatrang.loadHuyenUpdate(tinhId);
-
-					var huyen = $("#huyen").val();
-					alert(huyen);
-					nghiatrang.loadXaUpdate(huyen);
+					nghiatrang.loadHuyenUpdate(tinhId);					
 
 				});
 
@@ -301,6 +297,7 @@
 					});
 				}
 			},
+			
 
 			loadTinhUpdate: function () {
 				$.ajax({

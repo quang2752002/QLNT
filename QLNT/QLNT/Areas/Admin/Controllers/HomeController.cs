@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using GUIs.Areas.Admin.Controllers;
+using Microsoft.AspNetCore.Mvc;
 
 namespace QLNT.Areas.Admin.Controllers
 {

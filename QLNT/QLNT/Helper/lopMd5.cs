@@ -41,7 +41,7 @@ namespace QLNT.Helper
             return Encoding.UTF8.GetString(bytes);
         }
 
-        public string Encrypt(string i_strEncrypt, bool i_blUseHashing)
+        public static string Encrypt(string i_strEncrypt, bool i_blUseHashing)
         {
             byte[] inputBuffer = new byte[checked(i_strEncrypt.Length - 1 + 1)];
             try
