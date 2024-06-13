@@ -25,6 +25,7 @@ namespace QLNT.Models.EF
         public virtual DbSet<NghiaTrangUser> NghiaTrangUsers { get; set; } = null!;
         public virtual DbSet<QuanLy> QuanLies { get; set; } = null!;
         public virtual DbSet<TinTuc> TinTucs { get; set; } = null!;
+        public virtual DbSet<Video> Videos { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -247,9 +248,18 @@ namespace QLNT.Models.EF
             {
                 entity.ToTable("TinTuc");
 
-                entity.Property(e => e.Tieude).HasMaxLength(50);
+                entity.Property(e => e.Anh).HasMaxLength(300);
+
+                entity.Property(e => e.Tieude).HasMaxLength(200);
 
                 entity.Property(e => e.TrangThai).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Video>(entity =>
+            {
+                entity.ToTable("Video");
+
+                entity.Property(e => e.Url).HasColumnName("url");
             });
 
             OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,459 @@
+﻿@{
+	ViewData["Title"] = "Home Page";
+}
+<style>
+	.container {
+		max-width: 1500px;
+		margin: 0 auto;
+		padding: 20px;
+		background-color: #f9f9f9;
+		border: 2px solid #545fc6;
+		border-radius: 5px;
+	}
+
+	h2 {
+		text-align: center;
+		font-size: 24px;
+		margin-bottom: 20px;
+	}
+
+	p {
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	.btn-primary {
+		margin-top: 20px;
+	}
+
+	.table-responsive {
+		width: 100%;
+		overflow-x: auto;
+	}
+
+		.table-responsive .table {
+			width: 100%;
+			min-width: 800px; /* Đặt chiều rộng tối thiểu của bảng theo yêu cầu */
+		}
+</style>
+
+<form class="container" style="background-color: #f6f8f7; box-shadow: 5px 5px 10px rgba(9, 6, 6, 0.5);">
+	<h2>Tra cứu thông tin liệt sỹ</h2>
+	<hr>
+	<div class="row">
+		<p>Thông tin liệt sỹ</p>
+		<div class="col-md-4">
+			<label for="ten">Họ tên liệt sỹ</label>
+			<input class="form-control" type="text" id="ten" placeholder="Nhập tối thiểu 2 kí tự">
+		</div>
+		<div class="col-md-2">
+			<label for="birth-year-select">Năm sinh</label>
+			<input class="form-control" type="text" id="birth-year-select">
+
+		</div>
+		<div class="col-md-2">
+			<label for="death-year-select">Năm hy sinh</label>
+			<input class="form-control" type="text" id="death-year-select">
+
+
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<p>Quê quán</p>
+		<div class="row">
+			<div class="col-md-4">
+				<label for="thanhPho">Tỉnh/Thành Phố</label>
+				@Html.DropDownList("tinhDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh/Thành Phố", new { @class = "form-control" })
+
+
+			</div>
+			<div class="col-md-4">
+				<label for="quan">Quận/Huyện</label>
+				@Html.DropDownList("huyenDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Quận/Huyện", new { @class = "form-control" })
+			</div>
+			<div class="col-md-4">
+				<label for="phuong">Xã/Phường</label>
+				@Html.DropDownList("xaDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã/Phường", new { @class = "form-control" })
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<p>Nghĩa trang yên nghỉ</p>
+		<div class="row">
+			<div class="col-md-3">
+				<label for="nghiaTrangThanhpho">Tỉnh/Thành Phố</label>
+				@Html.DropDownList("thanhpho", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh/Thành Phố", new { @class = "form-control" })
+
+			</div>
+			<div class="col-md-3">
+				<label for="nghiaTrangQuan">Quận/Huyện</label>
+				@Html.DropDownList("huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Quận/Huyện", new { @class = "form-control" })
+
+			</div>
+			<div class="col-md-3">
+				<label for="nghiaTrangPhuong">Xã/Phường</label>
+				@Html.DropDownList("xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã/Phường", new { @class = "form-control" })
+
+			</div>
+			<div class="col-md-3">
+				<label for="nghiaTrangId">Nghĩa Trang</label>
+				@Html.DropDownList("idnghiatrang", new SelectList(Enumerable.Empty<SelectListItem>(), "nghiaTrangId", "Ten"), "Chọn Nghĩa Trang", new { @class = "form-control" })
+
+			</div>
+		</div>
+	</div>
+	<br>
+	<div style="text-align: center;">
+		<button type="button" class="btn btn-primary" id="timkiem">Tìm kiếm</button>
+	</div>
+</form>
+
+<br>
+<div class="card container">
+	<div class="card-header">
+		<h2>Danh sách liệt sỹ</h2>
+	</div>
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>STT</th>
+						<th>Họ tên</th>
+						<th>Năm sinh</th>
+						<th>Năm hy sinh</th>
+						<th>Nguyên quán</th>
+						<th>Đơn vị</th>
+						<th>Cấp bậc</th>
+						<th>Nghĩa trang</th>
+						<th>Tỉnh/Thành Phố</th>
+						<th>Quận/Huyện</th>
+						<th>Phường/Xã</th>
+						<th>Vị trí hàng</th>
+						<th>Vị trí cột</th>
+					</tr>
+				</thead>
+				<tbody id="tbData"></tbody>
+				<tfoot style="text-align:center">
+					<tr>
+						<th colspan="100" id="pages"></th>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+
+@section scripts {
+	<script>
+		var lietsy = {
+			init: function () {
+
+				$("#timkiem").click(function () {
+					lietsy.search(1);
+				});
+
+
+
+				lietsy.loadTinh();
+				lietsy.loadTinhUpdate();
+				$("#tinhDropdown").change(function () {
+					var tinhId = $(this).val();
+					lietsy.loadHuyen(tinhId);
+				});
+
+				$("#huyenDropdown").change(function () {
+					var huyenId = $(this).val();
+					lietsy.loadXa(huyenId);
+				});
+				$("#thanhpho").change(function () {
+					var tinhId = $("#thanhpho").val();
+
+					lietsy.loadHuyenUpdate(tinhId);
+
+				});
+
+				$("#huyen").change(function () {
+
+					lietsy.loadXaUpdate();
+				});
+				$("#xa").change(function () {
+
+					lietsy.loadNghiaTrangUpdate();
+				});
+
+			},
+
+			loadTinh: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetTinh/',
+					success: function (res) {
+
+						var html = "<option value='0'>Chọn Tỉnh/Thành phố</option>";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#tinhDropdown").html(html);
+						});
+						lietsy.loadHuyen();
+
+					}
+				});
+			},
+			loadHuyen: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				var tinhId = $("#tinhDropdown").val();
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+					success: function (res) {
+
+						var html = "<option value='0'>Chọn Quận/Huyện</option>";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#huyenDropdown").html(html);
+
+
+						});
+						lietsy.loadXa();
+					}
+				});
+			},
+			loadXa: function () {
+
+				$("#xaDropdown").html("");
+				var huyenId = $("#huyenDropdown").val();
+
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+					success: function (res) {
+
+						var html = "<option value='0'>Chọn Xã/Phường</option>";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#xaDropdown").html(html);
+
+
+						});
+
+
+					}
+				});
+			},
+			loadTinhUpdate: function () {
+
+				$("#thanhpho").val("");
+				$("#huyen").html("");
+				$("#xa").html("");
+				$("#idnghiatrang").html("");
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetTinh/',
+					success: function (res) {
+
+						var html = "<option value='0'>Chọn Tỉnh/Thành Phố</option>";
+
+						$.each(res.data, function (index, item) {
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+
+						});
+						$("#thanhpho").html(html);
+						lietsy.loadHuyenUpdate(res.tinh);
+
+					}
+				});
+			},
+			loadHuyenUpdate: function () {
+				var tinhId = $("#thanhpho").val();
+				if (tinhId) {
+					$("#huyen").html("");
+					$("#xa").html("");
+					$("#idnghiatrang").html("");
+
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+						success: function (res) {
+
+							var html = "<option value='0'>Chọn Quận/Huyện</option>";
+
+							$.each(res.data, function (index, item) {
+
+								html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+
+							});
+							$("#huyen").html(html);
+							lietsy.loadXaUpdate();
+
+						}
+					});
+				}
+			},
+			loadXaUpdate: function () {
+				var huyenId = $("#huyen").val();
+				$("#xa").html("");
+				$("#idnghiatrang").html("");
+
+				if (huyenId) {
+
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+						success: function (res) {
+
+							var html = "<option value='0'>Chọn Xã/Phường</option>";
+
+							$.each(res.data, function (index, item) {
+
+								if (res.xa == item.diaChiId) {
+
+
+									html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								else {
+									html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								$("#xa").html(html);
+
+
+							});
+
+						}
+					});
+				}
+			},
+			loadNghiaTrangUpdate: function () {
+				var xaId = $("#xa").val();
+				$("#idnghiatrang").html("");
+
+				if (xaId) {
+
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/TimKiem/getListNghiaTrang/' + xaId,
+						success: function (res) {
+
+							var html = "<option value='0'>Chọn Nghĩa Trang</option>";
+
+							$.each(res, function (index, item) {
+
+
+								html += "<option value='" + item.nghiaTrangId + "'>" + item.ten + "</option>"
+
+							});
+							$("#idnghiatrang").html(html);
+						}
+					});
+				}
+			},
+			search: function (index) {
+				var name = $("#ten").val();
+				var namsinh = $("#birth-year-select").val();
+				var nammat = $("#death-year-select").val();
+				var tinhDropdown = $("#tinhDropdown").val();
+				var huyenDropdown = $("#huyenDropdown").val();
+				var xaDropdown = $("#xaDropdown").val();
+				var thanhpho = $("#thanhpho").val();
+				var huyen = $("#huyen").val();
+				var xa = $("#xa").val();
+				var idnghiatrang = $("#idnghiatrang").val();
+				var form = new FormData();
+				form.append("name", name);
+				form.append("namsinh", namsinh);
+				form.append("nammat", nammat);
+				form.append("tinhDropdown", tinhDropdown);
+				form.append("huyenDropdown", huyenDropdown);
+				form.append("xaDropdown", xaDropdown);
+				form.append("thanhpho", thanhpho);
+				form.append("huyen", huyen);
+				form.append("xa", xa);
+				form.append("idnghiatrang", idnghiatrang);
+				form.append("index", index);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/TimKiem/ShowList/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.lietSyId + "</td>";
+							html += "<td>" + a.hoTen + "</td>";
+							html += "<td>" + a.ngaySinhS + "</td>";
+							html += "<td>" + a.ngayMatS + "</td>";
+							html += "<td>" + a.diachi + "</td>";
+							html += "<td>" + a.donVi + "</td>";
+							html += "<td>" + a.capBac + "</td>";
+							html += "<td>" + a.tenNghiaTrang + "</td>";
+							html += "<td>" + a.tinh + "</td>";
+							html += "<td>" + a.huyen + "</td>";
+							html += "<td>" + a.xa + "</td>";
+							html += "<td>" + a.viTriHang + "</td>";
+							html += "<td>" + a.viTriCot + "</td>";
+
+
+							html += "<td>" +
+								"<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.lietSyId + "'>Xem Ảnh</a>" + "</td>";
+
+							html += "</tr>";
+						});
+
+
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+
+
+
+
+
+
+
+
+
+		};
+
+		lietsy.init();
+
+		function goto(i) {
+			lietsy.search(i);
+		}
+	</script>
+}

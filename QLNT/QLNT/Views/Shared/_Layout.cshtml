@@ -7,30 +7,56 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/QLNT.styles.css" asp-append-version="true" />
+	
+	<link href="~/css/css.css" rel="stylesheet" />
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+
+        <div class="card text-bg-dark">
+            <img style="height: 80px;width: auto; " src="https://png.pngtree.com/thumb_back/fw800/background/20190223/ourmid/pngtree-blue-business-technology-light-effect-gradient-background-senselight-effectgradientbackgroundbluelight-spotatmospheresimplebusiness-image_81472.jpg" class="card-img" alt="...">
+
+            <div class="card-img-overlay">
+                <div class="row">
+
+                    <h5 class="card-title"><img style="height: 50px ;" src="http://www.thongtinlietsi.gov.vn/assets/img/app/header11.png" alt=""> Cổng thông tin điện tử về liệt sỹ,mộ liệt sỹ, nghĩa trang liệt sỹ</h5>
+
+                </div>
+
+                <!-- <p class="card-text"><small>Last updated 3 mins ago</small></p> -->
+            </div>
+        </div>
+
+        <nav class="navbar navbar-expand" style="background-color:#00B2EE;">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">QLNT</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a style="color:white;" class="nav-link active" aria-current="page" href="/">Trang chủ</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a style="color:white;" class="nav-link active" aria-current="page" href="#">Tin tức </a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color:white;" class="nav-link active" aria-current="page" href="/TimKiem/Index">Tìm kiếm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a style="color:white;" class="nav-link active" aria-current="page" href="#">Liên hệ phản hồi</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
+
+
+
+
     </header>
-    <div class="container">
+    <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -41,6 +67,17 @@
             &copy; 2024 - QLNT - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    <script>
+        function myMap() {
+            var mapProp = {
+                center: new google.maps.LatLng(51.508742, -0.120850),
+                zoom: 5,
+            };
+            var map = new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        }
+    </script>
+
+    <script src="https://maps.app.goo.gl/CAwaGi6ahqSZzV5g7"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

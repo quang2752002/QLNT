@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "c5F5sNEYdMXKh/UBNOwd6YOCXDmd54MFs9WmBkZxSb4=",
+  "Hash": "+S+2IN6SiF4mZaPlEnSEBSHajhkcHYHgePao9Zbjncs=",
   "Source": "QLNT",
   "BasePath": "_content/QLNT",
   "Mode": "Default",
@@ -42024,6 +42024,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Assets\\Themes2\\vendor\\jquery-easing\\jquery.easing.min.js"
+    },
+    {
+      "Identity": "D:\\Project\\QLNT\\QLNT\\QLNT\\wwwroot\\css\\css.css",
+      "SourceId": "QLNT",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Project\\QLNT\\QLNT\\QLNT\\wwwroot\\",
+      "BasePath": "_content/QLNT",
+      "RelativePath": "css/css.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\css.css"
     },
     {
       "Identity": "D:\\Project\\QLNT\\QLNT\\QLNT\\wwwroot\\css\\site.css",

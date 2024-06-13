@@ -60,10 +60,22 @@ namespace QLNT.Areas.Admin.Controllers
 			}
 			item.HoTen= ten;
 			item.Sdt = sdt;
-			item.DiaChiId = iddiachi;
+			if (iddiachi != 0)
+			{
+				item.DiaChiId = iddiachi;
+			}
+			
 			item.NghiaTrangId = idnghiatrang;
-			item.NgaySinh= ngaysinh;
-			item.NgayMat = ngaymat;
+		
+			
+			if(ngaysinh!=new  DateTime(0001, 1, 1))
+			{
+				item.NgaySinh = ngaysinh;
+			}
+			if (ngaymat != new DateTime(0001, 1, 1))
+			{
+				item.NgayMat = ngaymat;
+			}
 			item.DonVi = donvi;
 			item.CapBac = capbac;
 			item.ViTriCot=vitricot;
@@ -86,14 +98,18 @@ namespace QLNT.Areas.Admin.Controllers
 		public JsonResult getLietSy(int id)
 		{
 			var query = lietSyDAO.getItemView(id);
-			int xa = query.DiaChiId;
-			var diachi = diaChiDAO.getItemView(xa);
-			int huyen=diachi.ParentId.Value;
-			var diachiS=diaChiDAO.getItemView(huyen);
-			int tinh=diachiS.ParentId.Value;
-			HttpContext.Session.SetInt32(XA, xa);
-            HttpContext.Session.SetInt32(HUYEN, huyen);
-            HttpContext.Session.SetInt32(TINH, tinh);
+			int tinh=0;
+			if (query.DiaChiId !=0 )
+			{
+				int xa = query.DiaChiId;
+				var diachi = diaChiDAO.getItemView(xa);
+				int huyen = diachi.ParentId.Value;
+				var diachiS = diaChiDAO.getItemView(huyen);
+				tinh = diachiS.ParentId.Value;
+				HttpContext.Session.SetInt32(XA, xa);
+				HttpContext.Session.SetInt32(HUYEN, huyen);
+				HttpContext.Session.SetInt32(TINH, tinh);
+			}
             return Json(new {data=query ,tinh=tinh});
 		}
 	}

@@ -51,9 +51,9 @@
 							<div class="col-md-12 p-1">
 								<div class="input-group">
 									<div class="input-group-prepend">
-										<span class="input-group-text">Diện tích</span>
+										<span class="input-group-text">Diện tích(m²)</span>
 									</div>
-									<input type="number" class="form-control" id="dientich" />
+									<input type="number" class="form-control" id="dientich" min="1" />
 								</div>
 							</div>
 						</div>
@@ -64,9 +64,9 @@
 									<div class="input-group-prepend">
 										<span class="input-group-text">Địa chỉ</span>
 									</div>
-									@Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
-									@Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
-									@Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" })
+									@Html.DropDownList("tinhDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh/Thành Phố", new { @class = "form-control" })
+									@Html.DropDownList("huyenDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Quận/Huyện", new { @class = "form-control" })
+									@Html.DropDownList("xaDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã/Phường", new { @class = "form-control" })
 								</div>
 							</div>
 						</div>
@@ -83,7 +83,7 @@
 						<!-- Other input fields -->
 						<div class="form-group">
 							<div class="col-md-offset-2 col-md-10">
-								<button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh Sửa</button>
+								<button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
 							</div>
 						</div>
@@ -116,7 +116,7 @@
 										<span class="input-group-text">Tên nghĩa trang</span>
 									</div>
 									<input type="text" class="form-control" id="name" />
-									<input type="number" hidden class="form-control" id="id" />
+									<input type="number"  class="form-control" id="id" />
 								</div>
 							</div>
 						</div>
@@ -144,9 +144,9 @@
 							<div class="col-md-12 p-1">
 								<div class="input-group">
 									<div class="input-group-prepend">
-										<span class="input-group-text">Diện tích</span>
+										<span class="input-group-text">Diện tích(m²)</span>
 									</div>
-									<input type="number" class="form-control" id="acreage" />
+									<input type="number" class="form-control" id="acreage" min="1" />
 								</div>
 							</div>
 						</div>
@@ -176,7 +176,7 @@
 						<!-- Other input fields -->
 						<div class="form-group">
 							<div class="col-md-offset-2 col-md-10">
-								<button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
+								<button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh sửa</button>
 								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
 							</div>
 						</div>
@@ -216,10 +216,9 @@
 			<tr>
 				<th>ID</th>
 				<th>Tên nghĩa trang</th>
-				<th>SDT nghĩa trang</th>
-				<th>Email nghĩa trang</th>
+				
 				<th>Địa Chỉ</th>
-				<th>Diện tích</th>
+				
 				<th>Số lượng liệt sỹ</th>
 				<th>Danh sách liệt sỹ</th>
 				<th>Chỉnh sửa</th>
@@ -246,7 +245,12 @@
 
 
 				$("#create").click(function () {
+					
 					nghiatrang.create();
+				});
+				$("#save").click(function () {
+					
+					nghiatrang.save();
 				});
 				$('#update').on('show.bs.modal', function (event) {
 					var button = $(event.relatedTarget)
@@ -256,48 +260,114 @@
 
 					var tinhId = $("#thanhpho").val();
 
-					alert(tinhId);
+					
 					nghiatrang.loadHuyenUpdate(tinhId);
 
 
 				});
+				nghiatrang.loadTinh();
+
 				$("#tinhDropdown").change(function () {
-					var tinhId = $("#tinhDropdown").val();
-					nghiatrang.loadHuyen(tinhId);
+					
+					nghiatrang.loadHuyen();
+					
 				});
 
 				$("#huyenDropdown").change(function () {
-					var huyenId = $("#huyenDropdown").val();
-					nghiatrang.loadXa(huyenId);
+					
+					nghiatrang.loadXa();
 				});
 				$("#thanhpho").change(function () {
 					var tinhId = $("#thanhpho").val();
-					alert(tinhId);
+					
 					nghiatrang.loadHuyenUpdate(tinhId);					
 
 				});
 
 				$("#huyen").change(function () {
-					var huyenId = $("#huyen").val();
-					nghiatrang.loadXaUpdate(huyenId);
+				
+					nghiatrang.loadXaUpdate();
 				});
 
 			},
+			loadTinh: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetTinh/',
+					success: function (res) {
 
-			loadHuyen: function (tinhId) {
-				if (tinhId) {
-					$.get('/Admin/NghiaTrang/GetHuyen', { tinhId: tinhId }, function (data) {
-						$("#huyenDropdown").empty();
-						$("#huyenDropdown").append($('<option>', { value: '', text: 'Chọn Huyện' }));
-						$("#xaDropdown").empty();
-						$("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
-						$.each(data, function (index, item) {
-							$("#huyenDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
+						var html = "<option value=''>Chọn Tỉnh/Thành phố</option>";
+
+						$.each(res.data, function (index, item) {
+
+							
+								html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#tinhDropdown").html(html);
+							
+
 						});
-					});
-				}
+
+					}
+				});
 			},
+
+			loadHuyen: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				var tinhId = $("#tinhDropdown").val();
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+					success: function (res) {
+
+						var html = "";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#huyenDropdown").html(html);
+
+
+						});
+						nghiatrang.loadXa();
+					}
+				});
+			},
+			loadXa: function () {
 			
+				$("#xaDropdown").html("");
+				var huyenId = $("#huyenDropdown").val();
+
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+					success: function (res) {
+
+						var html = "";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#xaDropdown").html(html);
+
+
+						});
+						
+
+					}
+				});
+			},
+		
 
 			loadTinhUpdate: function () {
 				$.ajax({
@@ -329,7 +399,8 @@
 			loadHuyenUpdate: function (tinhId) {
 
 				if (tinhId) {
-
+					$("#huyen").html("");
+					$("#xa").html("");
 					$.ajax({
 						type: 'get',
 						dataType: 'json',
@@ -349,7 +420,9 @@
 									html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
 								}
 								$("#huyen").html(html);
-								nghiatrang.loadXaUpdate(res.huyen);
+								
+								
+								nghiatrang.loadXaUpdate();
 
 							});
 
@@ -358,7 +431,9 @@
 				}
 			},
 
-			loadXaUpdate: function (huyenId) {
+			loadXaUpdate: function () {
+				var huyenId = $("#huyen").val();
+				$("#xa").html("");
 				if (huyenId) {
 
 					$.ajax({
@@ -414,10 +489,9 @@
 							html += "<tr>";
 							html += "<td>" + a.nghiaTrangId + "</td>";
 							html += "<td>" + a.ten + "</td>";
-							html += "<td>" + a.sdt + "</td>";
-							html += "<td>" + a.email + "</td>";
+							
 							html += "<td>" + a.diaChi + "</td>";
-							html += "<td>" + a.dienTich + "</td>";
+							
 							html += "<td>" + a.soluong + "</td>";
 							html += "<td>" +
 								"<a href='/Admin/NghiaTrang/DanhSach/" + a.nghiaTrangId + "'  class='btn btn-primary' >Danh sách liệt sỹ</a>" + "</td>";
@@ -435,15 +509,53 @@
 			},
 
 			create: function () {
+
 				var ten = $("#ten").val();
 				var sdt = $("#sdt").val();
 				var email = $("#email").val();
 				var dientich = $("#dientich").val();
 				var diachiId = $("#xaDropdown").val();
 				var mota = $("#mota").val();
-
+				
 				var form = new FormData();
 				form.append("id", 0);
+				form.append("ten", ten);
+				form.append("sdt", sdt);
+				form.append("email", email);
+				form.append("dientich", dientich);
+				form.append("diachiId", diachiId);
+				form.append("mota", mota);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/NghiaTrang/InsertOrUpdate/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						nghiatrang.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+			save: function () {
+				var id = $("#id").val();
+				var ten = $("#name").val();
+				var sdt = $("#phone").val();
+				var email = $("#gmail").val();
+				var dientich = $("#acreage").val();
+				var diachiId = $("#xa").val();
+				var mota = $("#note").val();
+
+				var form = new FormData();
+				form.append("id", id);
 				form.append("ten", ten);
 				form.append("sdt", sdt);
 				form.append("email", email);
@@ -490,7 +602,7 @@
 					dataType: 'json',
 					url: '/Admin/NghiaTrang/getnghiatrang/' + id,
 					success: function (res) {
-						$("#id").val(res.data.nghiatrangId);
+						$("#id").val(res.data.nghiaTrangId);
 						$("#name").val(res.data.ten);
 						$("#phone").val(res.data.sdt);
 						$("#gmail").val(res.data.email);
@@ -503,24 +615,7 @@
 				});
 			},
 
-			save: function () {
-				var id = $("#id").val();
-				var name = $("#name").val();
-				var form = new FormData()
-				form.append("id", id);
-				form.append("name", name);
-				$.ajax({
-					type: 'POST',
-					dataType: 'json',
-					contentType: false,
-					processData: false,
-					data: form,
-					url: '/Admin/nghiatrang/InsertOrUpdate/',
-					success: function (res) {
-						_layout.showtoast(res.mess);
-					},
-				});
-			},
+			
 		};
 
 		nghiatrang.init();

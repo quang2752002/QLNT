@@ -1,0 +1,120 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+<div class="card">
+	<div class="card-header">
+		<h4>Thêm mới tin tức</h4>
+	</div>
+	<div class="card-body">
+		<div class="row">
+			<div class="col-md-12 p-1">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							Tiêu đề
+						</span>
+					</div>
+					<input type="text" class="form-control" id="tieude" />
+				</div>
+			</div>
+
+
+		</div>
+		<div class="row">
+			<div class="col-md-12 p-1">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							Nội dung
+						</span>
+					</div>
+					<textarea type="text" cols="20" rows="20" class="form-control" id="noidung"></textarea>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12 p-1">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text">
+							Ảnh
+						</span>
+					</div>
+					<input type="text" class="form-control" id="anh" />
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<button type="button" id="create" class="btn btn-primary" data-bs-dismiss="modal">Thêm mới</button>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+@section scripts {
+	<script>
+		var tintuc = {
+			init: function () {
+
+				$("#create").click(function () {
+					tintuc.create();
+				});
+
+
+			},
+
+
+			create: function () {
+				var tieude = $("#tieude").val();
+				var anh = $("#anh").val();
+				var noidung = $("#noidung").val();
+				var form = new FormData();
+				form.append("id", 0);
+				form.append("tieude", tieude);
+				form.append("anh", anh);
+				form.append("noidung", noidung);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/tintuc/InsertOrUpdate/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						// Optionally, refresh the list of provinces
+						tintuc.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+
+
+
+
+
+
+		};
+
+		tintuc.init();
+
+		function goto(i) {
+			tintuc.search(i);
+		}
+	</script>
+}

@@ -1,0 +1,182 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="modal fade" id="update" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel"></h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="card">
+					<div class="card-header">
+						<h4>Chỉnh sửa thông tin video</h4>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-12 p-1">
+								<div class="input-group">
+									<div class="input-group-prepend">
+										<span class="input-group-text">
+											Url
+										</span>
+									</div>
+									<input type="text" class="form-control" id="url" />
+									<input hidden type="number" class="form-control" id="id" />
+								</div>
+							</div>
+
+
+						</div>
+						<div class="form-group">
+							<div class="col-md-offset-2 col-md-10">
+								<button type="button" id="save" class="btn btn-primary" data-bs-dismiss="modal">Chỉnh sửa</button>
+								<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+
+
+	<div class="row">
+
+		<h1 style="text-align:center">Thông tin video</h1>
+	</div>
+
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					ID
+				</th>
+				<th>
+					Video
+				</th>
+
+				<th>
+					Xem chi tiết/Chỉnh sửa
+				</th>
+			
+			</tr>
+		</thead>
+
+		<tbody id="tbData"></tbody>
+		<tfoot style="text-align:center">
+			<tr>
+				<th colspan="100" id="pages">
+
+				</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+@section scripts {
+	<script>
+		var tintuc = {
+			init: function () {
+				tintuc.search(1);
+				$("#search").change(function () {
+					tintuc.search(1);
+				});
+				
+				$('#update').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var idhd = button.data('whatever')
+
+					tintuc.getVideo(idhd);
+
+				});
+
+				$("#save").click(function () {
+					tintuc.save();
+					tintuc.search(1);
+				});
+
+			},
+			search: function (index) {
+				
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					url: '/Admin/Video/ShowList/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.id + "</td>";
+							html += "<td>" + a.url + "</td>";
+							html += "<td>" +
+								"<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.id + "'><i class='fa fa-edit'></i></a>" + "</td>";
+							
+							html += "</tr>";
+
+						});
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+
+
+
+			getVideo: function (id) {
+				$.ajax({
+					type: 'get',
+					datatype: 'json',
+					url: '/Admin/Video/getVideo/'+id,
+					success: function (res) {
+						
+						$("#id").val(res.data.id);
+						$("#url").val(res.data.url);
+
+					}
+				});
+			},
+			save: function () {
+				var id = $("#id").val();
+				var url = $("#url").val();
+
+				var form = new FormData()
+				form.append("id", id);
+				form.append("url", url);
+
+				$.ajax({
+					type: 'POST',
+					dataType: 'Json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/Video/InsertOrUpdate/',
+					success: function (res) {
+
+						_layout.showtoast(res.mess);
+					},
+				});
+			},
+		
+			
+		};
+
+		tintuc.init();
+
+		function goto(i) {
+			tintuc.search(i);
+		}
+	</script>
+}

@@ -1,0 +1,9 @@
+﻿@media (max-width: 768px) {
+    #video-map {
+        order: 2; /* Đặt video và bản đồ xuống cuối */
+    }
+
+    #tbData {
+        order: 1; /* Đặt danh sách lên đầu */
+    }
+}

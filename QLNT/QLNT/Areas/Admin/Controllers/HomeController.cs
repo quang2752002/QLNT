@@ -1,5 +1,7 @@
 ﻿using GUIs.Areas.Admin.Controllers;
 using Microsoft.AspNetCore.Mvc;
+using QLNT.Helper;
+using QLNT.Models.DAO;
 
 namespace QLNT.Areas.Admin.Controllers
 {
@@ -10,5 +12,6 @@ namespace QLNT.Areas.Admin.Controllers
         {
             return View();
         }
-    }
+		
+	}
 }

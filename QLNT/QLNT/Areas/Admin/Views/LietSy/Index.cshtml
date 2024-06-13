@@ -36,9 +36,9 @@
 											Quê quán
 										</span>
 									</div>
-									@Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
-									@Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
-									@Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" })
+									@Html.DropDownList("tinhDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh/Thành Phố", new { @class = "form-control" })
+									@Html.DropDownList("huyenDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Quận/Huyện", new { @class = "form-control" })
+									@Html.DropDownList("xaDropdown", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã/Phường", new { @class = "form-control" })
 								</div>
 							</div>
 						</div>
@@ -74,7 +74,7 @@
 											Ngày sinh
 										</span>
 									</div>
-									<input type="datetime-local" class="form-control" id="ngaysinh" />
+									<input type="date" class="form-control" id="ngaysinh" />
 								</div>
 							</div>
 						</div>
@@ -86,7 +86,7 @@
 											Ngày mất
 										</span>
 									</div>
-									<input type="datetime-local" class="form-control" id="ngaymat" />
+									<input type="date" class="form-control" id="ngaymat" />
 								</div>
 							</div>
 						</div>
@@ -212,9 +212,9 @@
 											Quê quán
 										</span>
 									</div>
-									@* @Html.DropDownList("Tinh", new SelectList(ViewBag.Tinh, "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control", id = "tinhDropdown" })
-									@Html.DropDownList("Huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control", id = "huyenDropdown" })
-									@Html.DropDownList("Xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control", id = "xaDropdown" }) *@
+									@Html.DropDownList("thanhpho", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Tỉnh", new { @class = "form-control" })
+									@Html.DropDownList("huyen", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Huyện", new { @class = "form-control" })
+									@Html.DropDownList("xa", new SelectList(Enumerable.Empty<SelectListItem>(), "DiaChiId", "Ten"), "Chọn Xã", new { @class = "form-control" })
 								</div>
 							</div>
 						</div>
@@ -250,7 +250,7 @@
 											Ngày sinh
 										</span>
 									</div>
-									<input type="datetime-local" class="form-control" id="birthday" />
+									<input type="date" class="form-control" id="birthday" />
 								</div>
 							</div>
 						</div>
@@ -262,7 +262,7 @@
 											Ngày mất
 										</span>
 									</div>
-									<input type="datetime-local" class="form-control" id="deathday" />
+									<input type="date" class="form-control" id="deathday" />
 								</div>
 							</div>
 						</div>
@@ -388,13 +388,7 @@
 				<th>Họ Tên</th>
 				<th>Quê quán </th>
 				<th>Nơi an nghỉ </th>
-				@* <th>SĐT</th>
-				<th>Ngày Sinh</th>
-				<th>Ngày Mất</th> *@
-				<th>Đơn Vị</th>
-				<th>Cấp Bậc</th>
-				@* <th>Vị Trí Hàng</th>
-				<th>Vị Trí Cột</th> *@
+				
 				<th>Chỉnh sửa</th>
 				<th>Xóa</th>
 			</tr>
@@ -424,12 +418,17 @@
 					var idhd = button.data('whatever')
 
 					lietsy.getLietSy(idhd);
+				
+
+
+					lietsy.loadHuyenUpdate();
 
 				});
 				$("#save").click(function () {
 					lietsy.save();
 					lietsy.search(1);
 				});
+				lietsy.loadTinh();
 				$("#tinhDropdown").change(function () {
 					var tinhId = $(this).val();
 					lietsy.loadHuyen(tinhId);
@@ -439,30 +438,189 @@
 					var huyenId = $(this).val();
 					lietsy.loadXa(huyenId);
 				});
+				$("#thanhpho").change(function () {
+					var tinhId = $("#thanhpho").val();
+
+					lietsy.loadHuyenUpdate(tinhId);
+
+				});
+
+				$("#huyen").change(function () {
+
+					lietsy.loadXaUpdate();
+				});
 			},
 
-			loadHuyen: function (tinhId) {
-				if (tinhId) {
-					$.get('/Admin/LietSy/GetHuyen', { tinhId: tinhId }, function (data) {
-						$("#huyenDropdown").empty();
-						$("#huyenDropdown").append($('<option>', { value: '', text: 'Chọn Huyện' }));
-						$("#xaDropdown").empty();
-						$("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
-						$.each(data, function (index, item) {
-							$("#huyenDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
+			loadTinh: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetTinh/',
+					success: function (res) {
+
+						var html = "<option value=''>Chọn Tỉnh/Thành phố</option>";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#tinhDropdown").html(html);
+
+
 						});
+
+					}
+				});
+			},
+
+			loadHuyen: function () {
+				$("#huyenDropdown").html("");
+				$("#xaDropdown").html("");
+				var tinhId = $("#tinhDropdown").val();
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+					success: function (res) {
+
+						var html = "";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#huyenDropdown").html(html);
+
+
+						});
+						lietsy.loadXa();
+					}
+				});
+			},
+			loadXa: function () {
+
+				$("#xaDropdown").html("");
+				var huyenId = $("#huyenDropdown").val();
+
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+					success: function (res) {
+
+						var html = "";
+
+						$.each(res.data, function (index, item) {
+
+
+							html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+
+							$("#xaDropdown").html(html);
+
+
+						});
+
+
+					}
+				});
+			},
+
+			loadTinhUpdate: function () {
+				$("#thanhpho").val("");
+				$.ajax({
+					type: 'get',
+					dataType: 'json',
+					url: '/Admin/NghiaTrang/GetTinh/',
+					success: function (res) {
+
+						var html = "";
+
+						$.each(res.data, function (index, item) {
+
+							if (res.tinh == item.diaChiId) {
+
+								html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+							}
+							else {
+								html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+							}
+							$("#thanhpho").html(html);
+							lietsy.loadHuyenUpdate(res.tinh);
+
+						});
+
+					}
+				});
+			},
+
+			loadHuyenUpdate: function () {
+				var tinhId = $("#thanhpho").val();
+				if (tinhId) {
+					$("#huyen").html("");
+					$("#xa").html("");
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/Admin/NghiaTrang/GetHuyen/' + tinhId,
+						success: function (res) {
+
+							var html = "";
+
+							$.each(res.data, function (index, item) {
+
+								if (res.huyen == item.diaChiId) {
+
+
+									html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								else {
+									html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								$("#huyen").html(html);
+
+
+								lietsy.loadXaUpdate();
+
+							});
+
+						}
 					});
 				}
 			},
 
-			loadXa: function (huyenId) {
+			loadXaUpdate: function () {
+				var huyenId = $("#huyen").val();
+				$("#xa").html("");
 				if (huyenId) {
-					$.get('/Admin/LietSy/GetXa', { huyenId: huyenId }, function (data) {
-						$("#xaDropdown").empty();
-						$("#xaDropdown").append($('<option>', { value: '', text: 'Chọn Xã' }));
-						$.each(data, function (index, item) {
-							$("#xaDropdown").append($('<option>', { value: item.diaChiId, text: item.ten }));
-						});
+
+					$.ajax({
+						type: 'get',
+						dataType: 'json',
+						url: '/Admin/NghiaTrang/GetXa/' + huyenId,
+						success: function (res) {
+
+							var html = "";
+
+							$.each(res.data, function (index, item) {
+
+								if (res.xa == item.diaChiId) {
+
+
+									html += "<option selected value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								else {
+									html += "<option value='" + item.diaChiId + "'>" + item.ten + "</option>"
+								}
+								$("#xa").html(html);
+
+
+							});
+
+						}
 					});
 				}
 			},
@@ -489,15 +647,10 @@
 							html += "<tr>";
 							html += "<td>" + a.lietSyId + "</td>";
 							html += "<td>" + a.hoTen + "</td>";
-							html += "<td>" + a.diaChiId + "</td>";
+							html += "<td>" + a.diachi + "</td>";
 							html += "<td>" + a.tenNghiaTrang + "</td>";
-							// html += "<td>" + a.sdt + "</td>";
-							// html += "<td>" + a.ngaySinh + "</td>";
-							// html += "<td>" + a.ngayMat + "</td>";
-							html += "<td>" + a.donVi + "</td>";
-							html += "<td>" + a.capBac + "</td>";
-							// html += "<td>" + a.viTriHang + "</td>";
-							// html += "<td>" + a.viTriCot + "</td>";
+							
+							
 							
 							html += "<td>" +
 								"<a href='javacript:void(0)' data-toggle='modal' data-target='#update' data-whatever='" + a.lietSyId + "'><i class='fa fa-edit'></i></a>" + "</td>";
@@ -528,16 +681,23 @@
 				var mota = $("#mota").val();
 				var tinhtrang = $("#tinhtrang").val();
 
-				var ngaysinh = new Date(ngaysinhS);
-				var ngaymat = new Date(ngaymatS);
+				// Kiểm tra xem ngày sinh và ngày mất có được nhập hay không
+				// Nếu không được nhập, gán giá trị null
+				var ngaysinh = ngaysinhS ? new Date(ngaysinhS) : null;
+				var ngaymat = ngaymatS ? new Date(ngaymatS) : null;
+
+				// Chuẩn hóa ngày thành định dạng chuỗi ISO nếu có dữ liệu
+				var ngaysinhISO = ngaysinh ? ngaysinh.toISOString() : null;
+				var ngaymatISO = ngaymat ? ngaymat.toISOString() : null;
+
 				var form = new FormData();
 				form.append("id", 0);
 				form.append("ten", ten);
 				form.append("iddiachi", iddiachi);
 				form.append("idnghiatrang", idnghiatrang);
 				form.append("sdt", sdt);
-				form.append("ngaysinh", ngaysinh.toISOString());
-				form.append("ngaymat", ngaymat.toISOString());
+				form.append("ngaysinh", ngaysinhISO);
+				form.append("ngaymat", ngaymatISO);
 				form.append("donvi", donvi);
 				form.append("capbac", capbac);
 				form.append("vitrihang", vitrihang);
@@ -565,10 +725,11 @@
 					}
 				});
 			},
+
 			save: function () {
 				var id = $("#id").val();
 				var ten = $("#name").val();
-				var iddiachi = $("#xaDropdown").val();
+				var iddiachi = $("#xa").val();
 				var idnghiatrang = $("#nghiatrang").val();
 				var sdt = $("#phone").val();
 				var ngaysinhS = $("#birthday").val();
@@ -580,6 +741,15 @@
 				var mota = $("#note").val();
 				var tinhtrang = $("#status").val();
 
+				// Kiểm tra xem ngày sinh và ngày mất có được nhập hay không
+				// Nếu không được nhập, gán giá trị null
+				var ngaysinh = ngaysinhS ? new Date(ngaysinhS) : null;
+				var ngaymat = ngaymatS ? new Date(ngaymatS) : null;
+
+				// Chuẩn hóa ngày thành định dạng chuỗi ISO nếu có dữ liệu
+				var ngaysinhISO = ngaysinh ? ngaysinh.toISOString() : null;
+				var ngaymatISO = ngaymat ? ngaymat.toISOString() : null;
+
 				var ngaysinh = new Date(ngaysinhS);
 				var ngaymat = new Date(ngaymatS);
 				var form = new FormData();
@@ -588,8 +758,8 @@
 				form.append("iddiachi", iddiachi);
 				form.append("idnghiatrang", idnghiatrang);
 				form.append("sdt", sdt);
-				form.append("ngaysinh", ngaysinh.toISOString());
-				form.append("ngaymat", ngaymat.toISOString());
+				form.append("ngaysinh", ngaysinhISO);
+				form.append("ngaymat", ngaymatISO);
 				form.append("donvi", donvi);
 				form.append("capbac", capbac);
 				form.append("vitrihang", vitrihang);
@@ -618,27 +788,60 @@
 				});
 			},
 			getLietSy: function (id) {
+				$("#phone").val("");
+				$("#name").val("");
+				$("#birthday").val("");
+				$("#deathday").val("");
+				$("#thanhpho").val("");
+				$("#huyen").val("");
+				$("#xa").val("");
+				$("#unit").val("");
+				$("#rank").val("");
+				$("#note").val("");
+				
 				$.ajax({
 					type: 'GET',
 					dataType: 'json',
 					url: '/Admin/LietSy/getLietSy/' + id,
 					success: function (res) {
-						$("#id").val(res.data.nghiaTrangId);
+						// Chuyển đổi chuỗi ngày tháng sang kiểu Date JavaScript
+						var birthday = new Date(res.data.ngaySinh);
+						var deathday = new Date(res.data.ngayMat);
+						var ngaysinh = new Date(res.data.ngaySinh);
+						var ngaymat = new Date(res.data.ngayMat);
+						// Cộng 1 ngày cho ngày sinh và ngày mất
+						birthday.setDate(birthday.getDate() + 1);
+						deathday.setDate(deathday.getDate() + 1);
+
+						// Đặt giá trị vào các input type date
+						$("#id").val(res.data.lietSyId);
 						$("#name").val(res.data.hoTen);
 						$("#phone").val(res.data.sdt);
-						$("#birthday").val(res.data.ngaySinh);
-						$("#deathday").val(res.data.ngayMat);
+
+						// So sánh ngày sinh và ngày mất với ngày hiện tại
+						if (birthday.toDateString() != new Date().toDateString() && ngaysinh.toDateString() != new Date().toDateString()) {
+							$("#birthday").val(birthday.toISOString().split('T')[0]); // Format yyyy-mm-dd
+						}
+						if (deathday.toDateString() != new Date().toDateString() && ngaymat.toDateString() != new Date().toDateString()) {
+							$("#deathday").val(deathday.toISOString().split('T')[0]); // Format yyyy-mm-dd
+						}
+						if(res.data.diaChiId!=0){
+							lietsy.loadTinhUpdate();
+						}
+						
 						$("#unit").val(res.data.donVi);
 						$("#rank").val(res.data.capBac);
 						$("#row").val(res.data.viTriHang);
-
 						$("#col").val(res.data.viTriCot);
 						$("#note").val(res.data.moTa);
 						$("#status").val(res.data.tinhTrang);
-
 					}
 				});
 			},
+
+
+
+
 			delete: function (id) {
 				if (confirm("Bạn có chắc chắn muốn xóa không?")) {
 					$.ajax({

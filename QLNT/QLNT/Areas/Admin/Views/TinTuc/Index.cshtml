@@ -1,0 +1,250 @@
+﻿@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+
+
+	<div class="row">
+
+		<h1 style="text-align:center">Tin Tức</h1>
+	</div>
+
+	<div class="row p-2">
+		<div class="col-md-2">
+			<a class="btn btn-primary" href="/Admin/TinTuc/Create">
+				Thêm mới
+			</a>
+		</div>
+		<div class="col-md-2">
+			<span>Số dòng/trang</span>
+		</div>
+		<div class="col-md-2">
+
+			@Html.DropDownList("Pagesize", new SelectList(ViewBag.Pagesize, "ID", "ID"), new { @class = "form-control" })
+		</div>
+		<div class="col-md-3">
+			<div class="dropdown" style="float:right">
+				<select class="form-select" aria-label="Default select example" id="trangthai">
+
+					<option value="active">Hoạt động</option>
+					<option value="inactive">Ẩn</option>
+					
+				</select>
+			</div>
+		</div>
+
+
+	</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>
+					ID
+				</th>
+				<th>
+					Tiêu đề
+				</th>
+				
+				<th>
+					Xem chi tiết/Chỉnh sửa
+				</th>
+				<th>Trạng thái </th>
+			</tr>
+		</thead>
+
+		<tbody id="tbData"></tbody>
+		<tfoot style="text-align:center">
+			<tr>
+				<th colspan="100" id="pages">
+
+				</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+@section scripts {
+	<script>
+		var tintuc = {
+			init: function () {
+				tintuc.search(1);
+				$("#search, #Pagesize,#trangthai").change(function () {
+					tintuc.search(1);
+				});
+				$("#btnew").click(function () {
+					$("#create").val("Thêm mới");
+					$("#id").val(0);
+				});
+				$("#close").click(function () {
+					$('#new').modal('hide');
+				});
+				$("#create").click(function () {
+					tintuc.create();
+				});
+				$('#update').on('show.bs.modal', function (event) {
+					var button = $(event.relatedTarget)
+					var idhd = button.data('whatever')
+
+					tintuc.gettintuc(idhd);
+
+				});
+				$("#save").click(function () {
+					tintuc.save();
+					tintuc.search(1);
+				});
+
+			},
+			search: function (index) {
+				var name = $("#search").val();
+				var size = $("#Pagesize").val();
+				var trangthai = $("#trangthai").val();
+				var form = new FormData();
+				form.append("name", name);
+				form.append("size", size);
+				form.append("index", index);
+				form.append("trangthai", trangthai);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/TinTuc/ShowList/',
+					success: function (res) {
+						var html = "";
+						$.each(res.data, function (index, a) {
+							html += "<tr>";
+							html += "<td>" + a.id + "</td>";
+							html += "<td>" + a.tieude + "</td>";
+							html += "<td>" +
+								"<a href='/Admin/tintuc/Edit/" + a.id + "'><i class='fa fa-edit'></i></a>" + "</td>";
+							if (a.trangThai =="active") {
+								html += "<td>" +
+									"<a href='javascript:void(0)' class='btn btn-danger'  onclick='tintuc.delete(" + a.id + ")'><i class='fa fa-trash'></i></a>" + "</td>";
+							}
+							else {
+								html += "<td>" +
+									"<a href='javascript:void(0)' class='btn btn-success'  onclick='tintuc.active(" + a.id + ")'>Hiển thị</a>" + "</td>";
+							}
+							html += "</tr>";
+
+						});
+						$("#tbData").html(html);
+						$("#pages").html(res.page);
+						$("#loading").hide();
+					},
+				});
+			},
+
+			create: function () {
+				var name = $("#provinceName").val();
+				var form = new FormData();
+				form.append("id", 0);
+				form.append("name", name);
+				$("#loading").show();
+				$.ajax({
+					type: 'POST',
+					dataType: 'json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/tintuc/InsertOrUpdate/',
+					success: function (res) {
+						_layout.showtoast(res.mess);
+						$('#new').modal('hide');
+						$("#loading").hide();
+						// Optionally, refresh the list of provinces
+						tintuc.search(1);
+					},
+					error: function (err) {
+						_layout.showtoast("Error: " + err.responseText);
+						$("#loading").hide();
+					}
+				});
+			},
+
+
+
+
+			delete: function (id) {
+				// Ask for confirmation before deleting
+				if (confirm("Bạn có chắc chắn muốn ẩn không?")) {
+					// Perform the delete operation here
+					// You can use an AJAX request to delete the item from the server
+					$.ajax({
+						type: 'Delete',
+						url: '/Admin/tintuc/Delete/' + id, // Adjust URL as necessary
+
+						success: function (res) {
+
+							// If the delete was successful, refresh the list
+							_layout.showtoast(res.mess);
+							tintuc.search(1); // Assuming you want to refresh the first page
+
+						}
+					});
+				}
+			},
+			active: function (id) {
+				// Ask for confirmation before deleting
+				if (confirm("Bạn có chắc chắn muốn đăng bài không?")) {
+					// Perform the delete operation here
+					// You can use an AJAX request to delete the item from the server
+					$.ajax({
+						type: 'post',
+						url: '/Admin/tintuc/Active/' + id, // Adjust URL as necessary
+
+						success: function (res) {
+
+							// If the delete was successful, refresh the list
+							_layout.showtoast(res.mess);
+							tintuc.search(1); // Assuming you want to refresh the first page
+
+						}
+					});
+				}
+			},
+			gettintuc: function (id) {
+				$.ajax({
+					type: 'get',
+					datatype: 'json',
+					url: '/Admin/tintuc/gettintuc/' + id,
+					success: function (res) {
+						$("#id").val(res.data.tintucId);
+						$("#name").val(res.data.ten);
+
+					}
+				});
+			},
+			save: function () {
+				var id = $("#id").val();
+				var name = $("#name").val();
+
+				var form = new FormData()
+				form.append("id", id);
+				form.append("name", name);
+
+				$.ajax({
+					type: 'POST',
+					dataType: 'Json',
+					contentType: false,
+					processData: false,
+					data: form,
+					url: '/Admin/tintuc/InsertOrUpdate/',
+					success: function (res) {
+
+						_layout.showtoast(res.mess);
+					},
+				});
+			},
+		};
+
+		tintuc.init();
+
+		function goto(i) {
+			tintuc.search(i);
+		}
+	</script>
+}

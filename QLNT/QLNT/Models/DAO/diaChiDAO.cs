@@ -34,8 +34,24 @@ namespace QLNT.Models.DAO
                          }).FirstOrDefault();
             return query;
         }
+		public List<diaChiVIEW> getDiaChiChild(int id)
+		{
 
-        public List<diaChiVIEW> getDiaChiChild(out int total, int id, string name = "", int index = 1, int size = 10, string trangthai = "active")
+			var query = (from a in context.DiaChis
+						 where a.ParentId == id && a.TrangThai == "active"
+						 select new diaChiVIEW
+						 {
+							 DiaChiId = a.DiaChiId,
+							 ParentId = a.ParentId ?? 0,
+							 Ten = a.Ten,
+							 Cap = a.Cap,
+							 TrangThai = a.TrangThai
+						 }).ToList();
+
+			return query;
+		}
+
+		public List<diaChiVIEW> getDiaChiChild(out int total, int id, string name = "", int index = 1, int size = 10, string trangthai = "active")
         {
 
             var query = (from a in context.DiaChis

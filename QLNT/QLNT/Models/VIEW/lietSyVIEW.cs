@@ -19,5 +19,11 @@ namespace GUIs.Models.VIEW
         public string TinhTrang { get; set; }
         public string TrangThai { get; set; }
         public string tenNghiaTrang { set; get; }
-    }
+        public string ngaySinhS { set; get; }
+        public string ngayMatS { set;get; }
+        public string diachi { set; get; }  
+        public string tinh { set;get; }
+		public string huyen { set; get; }
+		public string xa { set; get; }
+	}
 }

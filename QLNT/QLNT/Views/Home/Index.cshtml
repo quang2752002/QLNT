@@ -2,7 +2,83 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container">
+    <div class="row">
+        <br />
+        <div class="col-md-6 mb-3" id="video-map">
+          
+            <div id="video">
+               
+
+            </div>
+
+            <div id="googleMap" style="width:100%;height:400px;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29906.85920930566!2d106.32888319999999!3d20.4505088!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135e594080402b3%3A0xf52abb3e4e104a8f!2sGO*21%20Thai%20Binh!5e0!3m2!1sen!2s!4v1718244314859!5m2!1sen!2s" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+        <div class="col-md-6" id="tbData">
+        </div>
+    </div>
 </div>
+
+
+
+@section scripts {
+    <script>
+        var home = {
+            init: function () {
+                home.search(1);
+                home.getvideo();
+            },
+            search: function (index) {
+                $("#loading").show();
+                $.ajax({
+                    type: 'get',
+                    dataType: 'json',
+                    contentType: false,
+                    processData: false,
+                    url: '/Home/ShowList/',
+                    success: function (res) {
+                        var html = "";
+                        $.each(res.data, function (index, a) {
+                            html += '<a class="card mb-3" style="max-width: 100%; text-decoration: none;" href="#">';
+                            html += '<div class="row g-0">';
+                            html += '<div class="col-4">';
+                            html += '<img src=' + a.anh + ' class="img-fluid rounded-start" alt="...">';
+                            html += '</div>';
+                            html += '<div class="col-8">';
+                            html += '<div class="card-body">';
+                            html += '<h5 class="card-title">' + a.tieude + '</h5>';
+                          
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</div>';
+                            html += '</a>';
+                        });
+                        $("#tbData").html(html);
+                        $("#loading").hide();
+                    },
+                });
+            },
+            getvideo() {
+                $.ajax({
+                    type: 'get',
+                    datatype: 'json',
+                    url: '/Home/getVideo/',
+                    success: function (res) {
+
+                        $("#video").html(res.data.url);
+
+
+                    }
+                });
+            }
+        };
+
+        home.init();
+
+        function goto(i) {
+            home.search(i);
+        }
+    </script>
+}

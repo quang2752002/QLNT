@@ -40,10 +40,10 @@ namespace QLNT.Models.DAO
 
             return query;
         }
-        public nghiaTrangVIEW getItemDiaChi(int id)
+        public nghiaTrangVIEW getNghiaTrangByIdXa(int idxa)
         {
             var query = (from a in context.NghiaTrangs
-                         where a.DiaChiId == id && a.TrangThai == "active"
+                         where a.DiaChiId == idxa && a.TrangThai == "active"
                          select new nghiaTrangVIEW
                          {
                              NghiaTrangId = a.NghiaTrangId,
@@ -51,9 +51,9 @@ namespace QLNT.Models.DAO
                              Ten = a.Ten,
                              Sdt = a.Sdt,
                              Email = a.Email,
-                             Soluong = a.Soluong.Value,
+                             Soluong = a.Soluong??0,
                              DiaChi = a.DiaChi,
-                             DienTich = a.DienTich.Value,
+                             DienTich = a.DienTich??0,
                              MoTa = a.MoTa,
                              TrangThai = a.TrangThai
                          }).FirstOrDefault();
@@ -64,6 +64,9 @@ namespace QLNT.Models.DAO
         {
             if (name == null) name = "";
             var query = (from a in context.NghiaTrangs
+                         join b in context.DiaChis on a.DiaChiId equals b.DiaChiId
+                         join c in context.DiaChis on b.ParentId equals c.DiaChiId 
+                         join d in context.DiaChis on c.ParentId equals d.DiaChiId
                          where a.TrangThai==trangthai
                          select new nghiaTrangVIEW
                          {
@@ -73,7 +76,7 @@ namespace QLNT.Models.DAO
                              Sdt = a.Sdt,
                              Email = a.Email,
                              Soluong = a.Soluong??0,
-                             DiaChi = a.DiaChi,
+                             DiaChi = b.Ten+","+c.Ten+","+d.Ten,
                              DienTich = a.DienTich.Value,
                              MoTa = a.MoTa,
                              TrangThai = a.TrangThai
@@ -112,6 +115,6 @@ namespace QLNT.Models.DAO
 
 			return query.ToList();
 		}
-
+        
 	}
 }
